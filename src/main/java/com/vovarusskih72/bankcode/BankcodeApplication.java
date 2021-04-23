@@ -9,7 +9,6 @@ public class BankcodeApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(BankcodeApplication.class, args);
-        System.setProperty("java.version", "13");
     }
 
 }
