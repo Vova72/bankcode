@@ -1,0 +1,35 @@
+* {
+    float: left;
+    padding: 0px;
+    margin: 0px;
+}
+
+body {
+    width: 100%;
+    height: auto;
+}
+
+.loginForm {
+    background-color: #cddbc4;
+    border: #b1c8a3 1px solid;
+    border-radius: 5px;
+    width: 70%;
+    height: auto;
+    margin-left: 16%;
+    margin-top: 10%;
+    padding: 5%;
+}
+
+.hrefAccount {
+    text-decoration-line: none;
+    margin-top: 1.5%;
+    margin-left: 50%;
+    font-size: 1.01em;
+}
+
+.error {
+    color: orangered;
+    font-size: 1.01em;
+    margin-left: 5%;
+    margin-top: 1.5%;
+}

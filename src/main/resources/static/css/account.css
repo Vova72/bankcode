@@ -1,0 +1,58 @@
+html, body {
+    height: 100%;
+    width: 100%;
+}
+
+.accountInfo {
+    width: 80%;
+}
+
+.accountInfo tr {
+    font-size: 1.2em;
+}
+
+.accountInfo tr td {
+    color: #B03329;
+    font-style: italic;
+}
+
+#menu {
+    float: left;
+    border: white solid 2px;
+    border-bottom: none;
+    border-left: none;
+    border-top: none;
+    padding: 1%;
+    height: 90%;
+    padding-bottom: 25%;
+}
+
+#menuButton {
+    border-radius: 5px;
+    margin: 2%;
+    margin-bottom: 15%;
+}
+
+.navigation {
+    padding: 1%;
+    border-bottom: grey solid 2px;
+    height: 10%;
+}
+
+.exchange {
+    float: left;
+    margin-left: 5%;
+    height: 10%;
+    padding-top: 1%;
+}
+
+.pageable {
+    float: left;
+    margin-left: 45%;
+}
+
+.exchangesmain {
+    float: left;
+    width: 83%;
+    margin-left: 2%;
+}
