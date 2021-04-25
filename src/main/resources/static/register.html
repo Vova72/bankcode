@@ -11,25 +11,30 @@
     <form id="registerForm">
         <div class="input-group mb-3">
             <span class="input-group-text" id="loginS">Login</span>
-            <input type="text" id="login" class="form-control" placeholder="Create login" aria-label="Login" aria-describedby="basic-addon1">
+            <input type="text" id="login" class="form-control" placeholder="Create login" aria-label="Login" aria-describedby="basic-addon1" required>
+            <div id="validationServer05Feedback" class="invalid-feedback">
+                login is already in use
+            </div>
         </div>
         <div class="input-group mb-3">
             <span class="input-group-text" id="nameS">Name</span>
-            <input type="text" placeholder="Enter your real name" id="name" class="form-control" aria-label="Name" aria-describedby="basic-addon1">
+            <input type="text" placeholder="Enter your real name" id="name" class="form-control" aria-label="Name" aria-describedby="basic-addon1" required>
             <span class="input-group-text" id="surnameS">Surname</span>
-            <input type="text" id="surname" class="form-control" placeholder="Enter your real surname" aria-label="Surname" aria-describedby="basic-addon1">
+            <input type="text" id="surname" class="form-control" placeholder="Enter your real surname" aria-label="Surname" aria-describedby="basic-addon1" required>
         </div>
         <div class="input-group mb-3">
             <span class="input-group-text" id="passwordS">Password</span>
-            <input type="password" minlength="8" id="password" class="form-control" placeholder="Create difficult password" aria-label="Password" aria-describedby="basic-addon1">
+            <input type="password" minlength="8" id="password" class="form-control" placeholder="Create difficult password" aria-label="Password" aria-describedby="basic-addon1" required>
         </div>
         <div class="input-group mb-3">
             <span class="input-group-text" id="emailS">Email</span>
-            <input type="text" id="email" class="form-control" placeholder="Example: example@gmail.com" aria-label="Email" aria-describedby="basic-addon1">
+            <input type="text" id="email" class="form-control" placeholder="Example: example@gmail.com" aria-label="Email" aria-describedby="basic-addon1" required>
             <span class="input-group-text" id="basic-addon1">Phone</span>
-            <input type="text" id="phone" class="form-control" placeholder="Example: +380991234567" aria-label="Phone" aria-describedby="basic-addon1">
+            <input type="text" id="phone" class="form-control" placeholder="Example: +380991234567" aria-label="Phone" aria-describedby="basic-addon1" required>
         </div>
-        <input type="button" class="btn btn-success" id="submitButton" value="Create account"><span class="error" id="error"></span>
+        <div class="col-12">
+            <button class="btn btn-primary" type="button" id="submitButton">Sign In</button>
+        </div>
     </form>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>

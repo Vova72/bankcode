@@ -10,13 +10,14 @@ body {
 }
 
 .loginForm {
-    background-color: #cddbc4;
-    border: #b1c8a3 1px solid;
+    position: fixed;
+    background-color: whitesmoke;
+    border: lightgrey 1px solid;
     border-radius: 5px;
-    width: 70%;
+    width: 60%;
     height: auto;
-    margin-left: 40%;
-    margin-top: 20%;
+    margin-left: 20%;
+    margin-top: 7%;
     padding: 5%;
 }
 

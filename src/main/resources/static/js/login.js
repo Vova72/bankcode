@@ -1,7 +1,7 @@
 $(document).ready(function () {
     var error = getParameterByName("error");
     if (error == "password") {
-        document.getElementById("error").innerHTML = "Login or email wrong";
+        $("#validationServer05").attr("class", "form-control is-invalid");
     }
 });
 

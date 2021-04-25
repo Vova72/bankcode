@@ -9,8 +9,8 @@ function registerFunc() {
         } else {
             var account = {
                 email: $("#email").val()
-            };
-            alert(JSON.stringify(account));
+            }
+
             $.ajax({
                 type: "POST",
                 url: "/checkaccountemail",

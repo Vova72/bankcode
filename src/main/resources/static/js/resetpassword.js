@@ -15,8 +15,6 @@ function registerFunc() {
                     password: $("#password").val()
                 }
 
-                alert(JSON.stringify(account));
-
                 $.ajax({
                     type: "POST",
                     url: "/setnewpassword",

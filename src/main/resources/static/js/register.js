@@ -5,7 +5,6 @@ $(document).ready(function () {
 function registerFunc() {
     $("#submitButton").click(function (e) {
         if($("#login").val() == "" || $("#name").val() == "" || $("#surname").val() == "" || $("#password").val() == "" || $("#email").val() == "" || $("#phone").val() == "") {
-        document.getElementById("error").innerHTML = "WARNING: Please enter all fields!";
         } else {
             var account = {
                 login: $("#login").val(),
@@ -22,7 +21,13 @@ function registerFunc() {
                 contentType: "application/json",
                 data: JSON.stringify(account),
                 dataType: "json",
-                success: alert("Your account has been created. Please check email to activate account")
+                success: alert("Your account has been created. Please check email to activate account"),
+                error: function (xhr, status, error) {
+                    var jsonError = jQuery.parseJSON( xhr.responseText );
+                    var desc = (jsonError != "") ? jsonError.description : "no details";
+
+                    $("#login").attr("class", "form-control is-invalid");
+                }
             });
             window.location.replace("/login.html");
         }

@@ -8,17 +8,28 @@
 </head>
 <body>
 <div class="loginForm">
-    <form action="/j_spring_security_check" method="POST">
-    <div class="input-group mb-3">
-        <span class="input-group-text" id="login">Login</span>
-        <input type="text" name="j_login" id="j_login" class="form-control" placeholder="Set login" aria-label="Email" aria-describedby="basic-addon1">
-    </div>
-    <div class="input-group mb-3">
-        <span class="input-group-text" id="password">Password</span>
-        <input type="password" name="j_password" id="j_password" class="form-control" placeholder="Set your password" aria-label="Password" aria-describedby="basic-addon1">
-    </div>
-        <span id="error"></span>
-        <div><button type="submit" class="btn btn-success" id="successButton">Success</button> <a class="hrefAccount" href="/newpassword.html">Forgot password?</a> <a class="hrefAccount" href="/register.html">Create new account</a></div>
+    <form class="row g-3" method="POST" action="/j_spring_security_check">
+        <div class="col-12">
+        <div class="col-md-12">
+            <label class="form-label">Username</label>
+            <div class="input-group has-validation">
+                <span class="input-group-text" id="inputGroupPrepend3">@</span>
+                <input name="j_login" type="text" class="form-control" id="j_login" aria-describedby="inputGroupPrepend3 validationServerUsernameFeedback" required>
+            </div>
+        </div>
+        </div>
+        <div class="col-12">
+            <div class="col-md-12">
+                <label for="validationServer05" class="form-label">Password</label>
+                <input name="j_password" type="password" class="form-control" id="validationServer05" aria-describedby="validationServer05Feedback" required>
+                <div id="validationServer05Feedback" class="invalid-feedback">
+                    Wrong password or username
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <button class="btn btn-primary" type="submit">Log In</button> <a href="/newpassword.html" class="btn btn-link">Forgot password?</a> <a href="/register.html" class="btn btn-link">Create account</a>
+        </div>
     </form>
 </div>
 
