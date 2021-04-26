@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,8 +23,10 @@ public class WalletService {
     public List<CardDTO> getAllCards(String walletName, Pageable pageable) {
         List<Card> cards = cardRepository.findCardByWalletName(walletName, pageable);
         List<CardDTO> cardsDTO = new ArrayList<>();
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         for(Card card : cards) {
-            cardsDTO.add(new CardDTO(card.getNumber(), null ,card.getExchange().toString(), card.getAmount()));
+            String killDate = format.format(card.getKillDate());
+            cardsDTO.add(new CardDTO(card.getNumber(), null ,card.getExchange().toString(), card.getAmount(), killDate));
         }
         return cardsDTO;
     }

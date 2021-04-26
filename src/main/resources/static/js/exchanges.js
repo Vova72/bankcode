@@ -49,12 +49,14 @@ function loadPages(pageSize) {
             (pages % pageSize > 0 ? 1 : 0);
         var i;
 
-        for (i = 1; i <= pageCount; i++) {
-            $('#pages').append(
-                $('<li>').attr('class', 'page-item').append(
-                    $('<a>').attr('class', 'page-link').attr('id', i - 1)
-                        .append('Page ' + i))
-            );
+        if(pageCount >= 2) {
+            for (i = 1; i <= pageCount; i++) {
+                $('#pages').append(
+                    $('<li>').attr('class', 'page-item').append(
+                        $('<a>').attr('class', 'page-link').attr('id', i - 1)
+                            .append('Page ' + i))
+                );
+            }
         }
 
         $("#pages").on("click", ".page-link", function(event) {

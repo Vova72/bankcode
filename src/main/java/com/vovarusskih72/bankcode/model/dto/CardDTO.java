@@ -5,12 +5,14 @@ public class CardDTO {
     private String pinCode;
     private String exchange;
     private double amount;
+    private String killDate;
 
-    public CardDTO(String number, String pinCode, String exchange, double amount) {
+    public CardDTO(String number, String pinCode, String exchange, double amount, String killDate) {
         this.number = number;
         this.pinCode = pinCode;
         this.exchange = exchange;
         this.amount = amount;
+        this.killDate = killDate;
     }
 
     public String getPinCode() {
@@ -27,6 +29,14 @@ public class CardDTO {
 
     public void setExchange(String exchange) {
         this.exchange = exchange;
+    }
+
+    public String getKillDate() {
+        return killDate;
+    }
+
+    public void setKillDate(String killDate) {
+        this.killDate = killDate;
     }
 
     public String getNumber() {

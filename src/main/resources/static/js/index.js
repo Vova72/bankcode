@@ -33,7 +33,7 @@ function setCards(page) {
                 $('<div class="col">')
                     .append(
                         $("<div class=\"card\" style=\"width: 18rem; margin: 10%; margin-top: 10%;\">").append($('<div class="cardimg">').append($('<h5 class="card-title" style="margin-top: 5%; margin-left: 15%; margin-bottom: 10%;">').append(data[i].number),
-                            $("<h5 class=\"card-title\" style=\"margin-left: 50%;\">").append("01/01/2024")))
+                            $("<h5 class=\"card-title\" style=\"margin-left: 50%;\">").append(data[i].killDate)))
                     .append($("<ul class=\"list-group list-group-flush\">").append(
                         $("<li class=\"list-group-item\">").append("Balance: " + data[i].amount),
                         $("<li class=\"list-group-item\">").append("Exchange: " + data[i].exchange)
@@ -51,7 +51,7 @@ function setCards(page) {
                 $('<div class="col">')
                     .append(
                         $("<div class=\"card\" style=\"width: 18rem; margin: 10%; margin-top: 10%;\">").append($('<div class="cardimg">').append($('<h5 class="card-title" style="margin-top: 5%; margin-left: 15%; margin-bottom: 10%;">').append(data[i].number),
-                            $("<h5 class=\"card-title\" style=\"margin-left: 50%;\">").append("01/01/2024")))
+                            $("<h5 class=\"card-title\" style=\"margin-left: 50%;\">").append(data[i].killDate)))
                             .append($("<ul class=\"list-group list-group-flush\">").append(
                                 $("<li class=\"list-group-item\">").append("Balance: " + data[i].amount),
                                 $("<li class=\"list-group-item\">").append("Exchange: " + data[i].exchange)
@@ -75,14 +75,17 @@ function loadPages(pageSize) {
 
     var pageCount = (pages / pageSize) +
         (pages % pageSize > 0 ? 1 : 0);
+
     var i;
 
-    for (i = 1; i <= pageCount; i++) {
-        $('#pages').append(
-            $('<li>').attr('class', 'page-item').append(
-                $('<a>').attr('class', 'page-link').attr('id', i - 1)
-                    .append('Page ' + i))
-        );
+    if(pageCount >= 2) {
+        for (i = 1; i <= pageCount; i++) {
+            $('#pages').append(
+                $('<li>').attr('class', 'page-item').append(
+                    $('<a>').attr('class', 'page-link').attr('id', i - 1)
+                        .append('Page ' + i))
+            );
+        }
     }
 
     $("#pages").on("click", ".page-link", function(event) {
