@@ -74,7 +74,7 @@ public class MainController {
         String passHash = passwordEncoder.encode(account.getPassword());
         String code = passwordEncoder.encode(account.getLogin() + account.getName() + account.getSurname() + account.getPassword());
         Account accountSave = new Account(account.getLogin(), account.getName(), account.getSurname(), passHash, account.getPhone(), account.getEmail(), code, UserRoles.USER);
-        sendEmail(http.getHeader("host"), account.getEmail(), code);
+//        sendEmail(http.getHeader("host"), account.getEmail(), code);
         accountRepository.save(accountSave);
         return true;
     }
