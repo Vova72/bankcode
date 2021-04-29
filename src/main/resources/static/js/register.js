@@ -20,16 +20,16 @@ function registerFunc() {
                 url: "/newuser",
                 contentType: "application/json",
                 data: JSON.stringify(account),
-                dataType: "json",
-                success: alert("Your account has been created. Please check email to activate account"),
-                // error: function (xhr, status, error) {
-                //     var jsonError = jQuery.parseJSON( xhr.responseText );
-                //     var desc = (jsonError != "") ? jsonError.description : "no details";
-                //
-                //     $("#login").attr("class", "form-control is-invalid");
-                // }
+                dataType: "json,
+                error: function (xhr, status, error) {
+                    var jsonError = jQuery.parseJSON( xhr.responseText );
+                    var desc = (jsonError != "") ? jsonError.description : "no details";
+
+                    $("#login").attr("class", "form-control is-invalid");
+                }
             });
-           window.location.replace("/login.html");
+            alert("Your account has been created. Please check email to activate account");
+            window.location.replace("/login.html");
         }
     });
 }
