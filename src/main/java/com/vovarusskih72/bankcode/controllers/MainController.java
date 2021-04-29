@@ -4,6 +4,7 @@ import com.vovarusskih72.bankcode.model.*;
 import com.vovarusskih72.bankcode.model.dto.AccountDTO;
 import com.vovarusskih72.bankcode.model.dto.CardDTO;
 import com.vovarusskih72.bankcode.model.dto.MainPageInfo;
+import com.vovarusskih72.bankcode.model.dto.TransactionDTO;
 import com.vovarusskih72.bankcode.repositories.AccountRepository;
 import com.vovarusskih72.bankcode.repositories.CardRepository;
 import com.vovarusskih72.bankcode.services.*;
@@ -72,7 +73,7 @@ public class MainController {
         System.out.println(account);
         String passHash = passwordEncoder.encode(account.getPassword());
         String code = passwordEncoder.encode(account.getLogin() + account.getName() + account.getSurname() + account.getPassword());
-        Account accountSave = new Account(account.getLogin(), account.getName(), account.getSurname(), passHash, account.getPhone(), account.getEmail(), code, UserRoles.UNACTIVATED);
+        Account accountSave = new Account(account.getLogin(), account.getName(), account.getSurname(), passHash, account.getPhone(), account.getEmail(), code, UserRoles.USER);
         sendEmail(http.getHeader("host"), account.getEmail(), code);
         accountRepository.save(accountSave);
         return true;
@@ -105,12 +106,12 @@ public class MainController {
     }
 
     @RequestMapping(value = "/maketransaction", method = RequestMethod.POST)
-    public boolean makeTransaction(@RequestParam("donorNumber") String donorNumber,
-                                   @RequestParam("pinCode") String pinCode,
-                                   @RequestParam("recipientNumber") String recipientNumber,
-                                   @RequestParam("exchange") String exchange,
-                                   @RequestParam("amount") double amount) {
-        boolean check = transactionService.makeNewTransaction(donorNumber, pinCode, recipientNumber, exchange, amount);
+    public boolean makeTransaction(@RequestBody TransactionDTO transaction) {
+        System.out.println(transaction.toString());
+        transaction.setDonorNumber(transaction.getDonorNumber().replace(" ", ""));
+        String pinCode = transaction.getPinCode();
+        System.out.println("-----------------------------" + transaction.getRecipientNumber() + " | " + transaction.getAmount());
+        boolean check = transactionService.makeNewTransaction(transaction.getDonorNumber(), pinCode, transaction.getRecipientNumber(), transaction.getAmount());
         return check;
     }
 

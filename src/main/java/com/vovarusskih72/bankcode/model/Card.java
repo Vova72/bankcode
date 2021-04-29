@@ -17,6 +17,7 @@ public class Card {
 
     @GeneratedValue
     private String number;
+    private String cvv;
     private Exchanges exchange;
     private double amount;
     private String pinCode;
@@ -36,8 +37,9 @@ public class Card {
 
     public Card() {}
 
-    public Card(String number, Exchanges exchange, double amount, String pinCode) {
+    public Card(String number, String cvv, Exchanges exchange, double amount, String pinCode) {
         this.number = number;
+        this.cvv = cvv;
         this.exchange = exchange;
         this.amount = amount;
         this.createDate = new Date();
@@ -134,5 +136,22 @@ public class Card {
 
     public void setPinCode(String pinCode) {
         this.pinCode = pinCode;
+    }
+
+    @Override
+    public String toString() {
+        return "Card{" +
+                "id=" + id +
+                ", number='" + number + '\'' +
+                ", cvv='" + cvv + '\'' +
+                ", exchange=" + exchange +
+                ", amount=" + amount +
+                ", pinCode='" + pinCode + '\'' +
+                ", createDate=" + createDate +
+                ", killDate=" + killDate +
+                ", wallet=" + wallet +
+                ", transactionsOut=" + transactionsOut +
+                ", transactionsIn=" + transactionsIn +
+                '}';
     }
 }

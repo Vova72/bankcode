@@ -13,7 +13,7 @@ function loadExchanges(page) {
         $("#email").empty();
         $("#phone").empty();
         $("#login").append(data.login);
-        $("#name").append(data.name + data.surname);
+        $("#name").append(data.name + " " + data.surname);
         $("#email").append(data.email);
         $("#phone").append(data.phone);
 

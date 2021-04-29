@@ -1,6 +1,7 @@
 package com.vovarusskih72.bankcode.services;
 
 import com.vovarusskih72.bankcode.model.Card;
+import com.vovarusskih72.bankcode.model.ExchangeTable;
 import com.vovarusskih72.bankcode.model.Exchanges;
 import com.vovarusskih72.bankcode.model.Transaction;
 import com.vovarusskih72.bankcode.repositories.CardRepository;
@@ -24,35 +25,61 @@ public class TransactionService {
     @Autowired
     private CardRepository cardRepository;
 
+    @Autowired
+    private ExchangeTableService exchangeTableService;
+
     @Transactional
-    public boolean makeNewTransaction(String donorCard, String pinCode, String recipientCard, String exchange, double amount) {
+    public boolean makeNewTransaction(String donorCard, String pinCode, String recipientCard, double amount) {
         if(cardService.checkPin(donorCard, pinCode)) {
             Exchanges exchanges = Exchanges.UAH;
-            switch (exchange) {
+
+            Card realDonorCard = cardService.getCardByNumber(donorCard);
+            Card realRecipientCard = cardService.getCardByNumber(recipientCard);
+            ExchangeTable exchangeTable = exchangeTableService.getTodayExchange();
+
+            double uah = exchangeTable.getUahBuy();
+            double usd = exchangeTable.getUsdBuy();
+            double eur = exchangeTable.getEurBuy();
+
+            double mainAmount;
+
+            switch (realDonorCard.getExchange().toString()) {
                 case "UAH":
-                    exchanges = Exchanges.UAH;
+                    mainAmount = amount * uah;
                     break;
                 case "USD":
-                    exchanges = Exchanges.USD;
+                    mainAmount = amount * usd;
                     break;
                 case "EUR":
-                    exchanges = Exchanges.EUR;
+                    mainAmount = amount * eur;
                     break;
             }
 
+            double lastAmount = 0;
 
-            Card realDonorCard = cardService.getCardByNumber(donorCard);
+            switch (realRecipientCard.getExchange().toString()) {
+                case "UAH":
+                    lastAmount = amount / uah;
+                    break;
+                case "USD":
+                    lastAmount = amount / usd;
+                    break;
+                case "EUR":
+                    lastAmount = amount / eur;
+                    break;
+            }
+
+            realRecipientCard.setAmount(realRecipientCard.getAmount() + lastAmount);
+            cardRepository.save(realRecipientCard);
+
             realDonorCard.setAmount(realDonorCard.getAmount() - amount);
             cardRepository.save(realDonorCard);
 
-            Card realRecipientCard = cardService.getCardByNumber(recipientCard);
-            realRecipientCard.setAmount(realRecipientCard.getAmount() + amount);
-            cardRepository.save(realDonorCard);
-
-            Transaction transaction = new Transaction(realDonorCard, realRecipientCard, exchanges, amount);
+            Transaction transaction = new Transaction(realDonorCard, realRecipientCard, exchanges, lastAmount);
             transactionRepository.save(transaction);
             return true;
         } else {
+            System.out.println("different pinCodes");
             return false;
         }
     }

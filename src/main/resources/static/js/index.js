@@ -32,7 +32,7 @@ function setCards(page) {
             $('#row1').append(
                 $('<div class="col">')
                     .append(
-                        $("<div class=\"card\" style=\"width: 18rem; margin: 10%; margin-top: 10%;\">").append($('<div class="cardimg">').append($('<h5 class="card-title" style="margin-top: 5%; margin-left: 15%; margin-bottom: 10%;">').append(data[i].number),
+                        $("<div class=\"card\" style=\"width: 18rem; margin: 10%; margin-top: 10%;\">").append($('<div class="cardimg">').append($('<h5 class="card-title" style="margin-top: 5%; margin-left: 15%; margin-bottom: 10%;">').append(setSpace(data[i].number)),
                             $("<h5 class=\"card-title\" style=\"margin-left: 50%;\">").append(data[i].killDate)))
                     .append($("<ul class=\"list-group list-group-flush\">").append(
                         $("<li class=\"list-group-item\">").append("Balance: " + data[i].amount),
@@ -50,7 +50,7 @@ function setCards(page) {
             $('#row2').append(
                 $('<div class="col">')
                     .append(
-                        $("<div class=\"card\" style=\"width: 18rem; margin: 10%; margin-top: 10%;\">").append($('<div class="cardimg">').append($('<h5 class="card-title" style="margin-top: 5%; margin-left: 15%; margin-bottom: 10%;">').append(data[i].number),
+                        $("<div class=\"card\" style=\"width: 18rem; margin: 10%; margin-top: 10%;\">").append($('<div class="cardimg">').append($('<h5 class="card-title" style="margin-top: 5%; margin-left: 15%; margin-bottom: 10%;">').append(setSpace(data[i].number)),
                             $("<h5 class=\"card-title\" style=\"margin-left: 50%;\">").append(data[i].killDate)))
                             .append($("<ul class=\"list-group list-group-flush\">").append(
                                 $("<li class=\"list-group-item\">").append("Balance: " + data[i].amount),
@@ -91,4 +91,8 @@ function loadPages(pageSize) {
     $("#pages").on("click", ".page-link", function(event) {
         setCards(event.target.id);
     });})
+}
+
+function setSpace(num) {
+    return num.replace(/(\d)(?=(\d{4})+$)/g, '$1 ');
 }

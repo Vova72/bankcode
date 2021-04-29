@@ -6,6 +6,7 @@ import com.vovarusskih72.bankcode.model.Wallet;
 import com.vovarusskih72.bankcode.repositories.CardRepository;
 import com.vovarusskih72.bankcode.repositories.WalletRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,9 @@ public class CardService {
     @Autowired
     private WalletRepository walletRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Transactional(readOnly = true)
     public Card getCardByNumber(String number) {
         Card card = cardRepository.findByNumber(number);
@@ -33,9 +37,6 @@ public class CardService {
 
         for(int i = 0; i < 16; i++) {
             number += (int) (Math.random() * 9);
-            if ((i + 1) % 4 == 0) {
-                number += " ";
-            }
         }
 
         while (cardRepository.existsByNumber(number)) {
@@ -43,13 +44,16 @@ public class CardService {
 
             for (int i = 0; i < 16; i++) {
                 number += (int) (Math.random() * 9);
-                if ((i + 1) % 4 == 0) {
-                    number += " ";
-                }
             }
         }
 
-        Card card = new Card(number, exchange, amount, pinCode);
+        String cvv = "";
+
+        for(int i = 0; i < 3; i++) {
+            cvv += (int) (Math.random() * 9);
+        }
+
+        Card card = new Card(number, cvv, exchange, amount, pinCode);
         wallet.addCard(card);
 
         cardRepository.save(card);
@@ -59,7 +63,8 @@ public class CardService {
     @Transactional(readOnly = true)
     public boolean checkPin(String number, String pinCode) {
         Card card = cardRepository.findByNumber(number);
-        if(card.getPinCode().equals(pinCode)) {
+        System.out.println(card.getPinCode() + " | " + pinCode);
+        if(passwordEncoder.matches(pinCode, card.getPinCode())) {
             return true;
         } else {
             return false;
