@@ -29,7 +29,7 @@ function registerFunc() {
                     $("#login").attr("class", "form-control is-invalid");
                 }
             });
-            window.location.replace("/login.html");
+           // window.location.replace("/login.html");
         }
     });
 }
