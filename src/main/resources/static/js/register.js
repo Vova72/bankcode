@@ -20,7 +20,7 @@ function registerFunc() {
                 url: "/newuser",
                 contentType: "application/json",
                 data: JSON.stringify(account),
-                dataType: "json,
+                dataType: "json",
                 error: function (xhr, status, error) {
                     var jsonError = jQuery.parseJSON( xhr.responseText );
                     var desc = (jsonError != "") ? jsonError.description : "no details";
