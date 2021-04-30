@@ -23,14 +23,17 @@ public class Transaction {
     private double amount;
     private Date date;
 
+    private String comment;
+
     public Transaction() {}
 
-    public Transaction(Card cardRecipient, Card cardDonor, Exchanges exchange, double amount) {
+    public Transaction(Card cardRecipient, Card cardDonor, Exchanges exchange, double amount, String comment) {
         this.cardRecipient = cardRecipient;
         this.cardDonor = cardDonor;
         this.exchange = exchange;
         this.amount = amount;
         this.date = new Date();
+        this.comment = comment;
     }
 
     public Long getId() {
@@ -71,5 +74,21 @@ public class Transaction {
 
     public void setAmount(double amount) {
         this.amount = amount;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

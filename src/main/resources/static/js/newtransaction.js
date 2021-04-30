@@ -9,13 +9,17 @@ function registerFunc() {
         if($("#pinCode").val().length < 4 || !is_numeric($("#pinCode").val())) {
             $("#pinCode").attr("class", "form-control is-invalid");
         } else {
-
+            var commentT = $("#comment").val();
+            if (commentT == "") {
+                commentT = "-";
+            }
             $("#cardsNumbers :selected").val()
             var transaction = {
                 donorNumber: $("#cardsNumbers :selected").val(),
                 pinCode: $("#pinCode").val(),
                 amount: $("#amount").val(),
-                recipientNumber: $("#recipientCard").val()
+                recipientNumber: $("#recipientCard").val(),
+                comment: commentT
             }
 
             alert(JSON.stringify(transaction));

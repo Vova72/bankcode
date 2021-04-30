@@ -111,7 +111,7 @@ public class MainController {
         transaction.setDonorNumber(transaction.getDonorNumber().replace(" ", ""));
         String pinCode = transaction.getPinCode();
         System.out.println("-----------------------------" + transaction.getRecipientNumber() + " | " + transaction.getAmount());
-        boolean check = transactionService.makeNewTransaction(transaction.getDonorNumber(), pinCode, transaction.getRecipientNumber(), transaction.getAmount());
+        boolean check = transactionService.makeNewTransaction(transaction.getDonorNumber(), pinCode, transaction.getRecipientNumber(), transaction.getAmount(), transaction.getComment());
         return check;
     }
 
@@ -140,15 +140,28 @@ public class MainController {
     }
 
     @RequestMapping(value = "/transactioninlist")
-    public List<Transaction> getTransactionInList(@RequestParam("cardNumber") String cardNumber, @RequestParam(value = "page", defaultValue = "0", required = false) Integer page) {
-        List<Transaction> transactions = transactionService.getTransactionsIn(cardNumber, PageRequest.of(page, TRANS_SIZE, Sort.Direction.DESC, "id"));
+    public List<TransactionDTO> getTransactionInList(@RequestParam(value = "page", defaultValue = "0", required = false) Integer page) {
+        List<TransactionDTO> transactions = transactionService.getTransactionsIn(PageRequest.of(page, TRANS_SIZE, Sort.Direction.DESC, "id"));
         return transactions;
     }
 
     @RequestMapping(value = "/transactionoutlist")
-    public List<Transaction> getTransactionOutList(@RequestParam("cardNumber") String cardNumber, @RequestParam(value = "page", defaultValue = "0", required = false) Integer page) {
-        List<Transaction> transactions = transactionService.getTransactionsOut(cardNumber, PageRequest.of(page, TRANS_SIZE, Sort.Direction.DESC, "id"));
+    public List<TransactionDTO> getTransactionOutList(@RequestParam(value = "page", defaultValue = "0", required = false) Integer page) {
+        List<TransactionDTO> transactions = transactionService.getTransactionsOut(PageRequest.of(page, TRANS_SIZE, Sort.Direction.DESC, "id"));
         return transactions;
+    }
+
+    @RequestMapping(value = "/alltransactions")
+    public List<TransactionDTO> getAllTransactions(@RequestParam(value = "page", defaultValue = "0", required = false) Integer page) {
+        String walletName = getCurrentWallet().getWalletName();
+        List<TransactionDTO> transaction = transactionService.getAllTransactions(walletName, PageRequest.of(page, TRANS_SIZE, Sort.Direction.DESC, "id"));
+        return transaction;
+    }
+
+    @RequestMapping(value = "/counttransactions")
+    public PagesAllCount getTransactionsCount() {
+        String walletName = getCurrentWallet().getWalletName();
+        return new PagesAllCount(transactionService.countTransactions(walletName));
     }
 
     public User getCurrentAccount() {

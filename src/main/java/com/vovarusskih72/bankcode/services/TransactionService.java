@@ -4,6 +4,7 @@ import com.vovarusskih72.bankcode.model.Card;
 import com.vovarusskih72.bankcode.model.ExchangeTable;
 import com.vovarusskih72.bankcode.model.Exchanges;
 import com.vovarusskih72.bankcode.model.Transaction;
+import com.vovarusskih72.bankcode.model.dto.TransactionDTO;
 import com.vovarusskih72.bankcode.repositories.CardRepository;
 import com.vovarusskih72.bankcode.repositories.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -29,8 +31,8 @@ public class TransactionService {
     private ExchangeTableService exchangeTableService;
 
     @Transactional
-    public boolean makeNewTransaction(String donorCard, String pinCode, String recipientCard, double amount) {
-        if(cardService.checkPin(donorCard, pinCode)) {
+    public boolean makeNewTransaction(String donorCard, String pinCode, String recipientCard, double amount, String comment) {
+        if (cardService.checkPin(donorCard, pinCode)) {
             Exchanges exchanges = Exchanges.UAH;
 
             Card realDonorCard = cardService.getCardByNumber(donorCard);
@@ -41,7 +43,7 @@ public class TransactionService {
             double usd = exchangeTable.getUsdBuy();
             double eur = exchangeTable.getEurBuy();
 
-            double mainAmount;
+            double mainAmount = 0;
 
             switch (realDonorCard.getExchange().toString()) {
                 case "UAH":
@@ -59,13 +61,13 @@ public class TransactionService {
 
             switch (realRecipientCard.getExchange().toString()) {
                 case "UAH":
-                    lastAmount = amount / uah;
+                    lastAmount = mainAmount / uah;
                     break;
                 case "USD":
-                    lastAmount = amount / usd;
+                    lastAmount = mainAmount / usd;
                     break;
                 case "EUR":
-                    lastAmount = amount / eur;
+                    lastAmount = mainAmount / eur;
                     break;
             }
 
@@ -75,7 +77,7 @@ public class TransactionService {
             realDonorCard.setAmount(realDonorCard.getAmount() - amount);
             cardRepository.save(realDonorCard);
 
-            Transaction transaction = new Transaction(realDonorCard, realRecipientCard, exchanges, lastAmount);
+            Transaction transaction = new Transaction(realDonorCard, realRecipientCard, exchanges, mainAmount, comment);
             transactionRepository.save(transaction);
             return true;
         } else {
@@ -85,8 +87,40 @@ public class TransactionService {
     }
 
     @Transactional(readOnly = true)
-    public List<Transaction> getTransactionsIn(String number, Pageable pageable) {return transactionRepository.findTransactionInByCardNumber(number, pageable); }
+    public List<TransactionDTO> getTransactionsIn(Pageable pageable) {
+        List<Transaction> transactionList = transactionRepository.findAllTransactionIn(pageable);
+        List<TransactionDTO> transactions = new ArrayList<>();
+        for (Transaction trans : transactionList) {
+            transactions.add(new TransactionDTO(trans.getCardDonor().getNumber(), null, trans.getCardRecipient().getNumber(), trans.getAmount(), trans.getComment(), "in"));
+        }
+        return transactions;
+    }
 
     @Transactional(readOnly = true)
-    public List<Transaction> getTransactionsOut(String number, Pageable pageable) {return transactionRepository.findTransactionOutByCardNumber(number, pageable); }
+    public List<TransactionDTO> getTransactionsOut(Pageable pageable) {
+        List<Transaction> transactionList = transactionRepository.findAllTransactionOut(pageable);
+        List<TransactionDTO> transactions = new ArrayList<>();
+        for(Transaction trans : transactionList) {
+            transactions.add(new TransactionDTO(trans.getCardDonor().getNumber(), null, trans.getCardRecipient().getNumber(), trans.getAmount(), trans.getComment(), "out"));
+        }
+        return transactions;
+    }
+
+    @Transactional(readOnly = true)
+    public List<TransactionDTO> getAllTransactions(String walletName, Pageable pageable) {
+        List<Transaction> transactionList = transactionRepository.findAllByWalletName(walletName, pageable);
+        List<TransactionDTO> transactions = new ArrayList<>();
+        List<String> numbers = cardService.getAllCardsNumber(walletName);
+        String type = "in";
+        for(Transaction trans : transactionList) {
+            if(numbers.contains(trans.getCardRecipient().getNumber())) {
+                type = "out";
+            }
+            transactions.add(new TransactionDTO(trans.getCardDonor().getNumber(), null, trans.getCardRecipient().getNumber(), trans.getAmount(), trans.getComment(), type));
+        }
+        return transactions;
+    }
+
+    @Transactional(readOnly = true)
+    public Long countTransactions(String walletName) {return transactionRepository.count(walletName); }
 }
