@@ -5,12 +5,19 @@ import com.vovarusskih72.bankcode.model.dto.AccountDTO;
 import com.vovarusskih72.bankcode.model.dto.CardDTO;
 import com.vovarusskih72.bankcode.model.dto.MainPageInfo;
 import com.vovarusskih72.bankcode.model.dto.TransactionDTO;
+import com.vovarusskih72.bankcode.model.dto.results.BadRequestResult;
+import com.vovarusskih72.bankcode.model.dto.results.ErrorInformation;
+import com.vovarusskih72.bankcode.model.dto.results.ResultDTO;
+import com.vovarusskih72.bankcode.model.dto.results.SuccessResult;
 import com.vovarusskih72.bankcode.repositories.AccountRepository;
 import com.vovarusskih72.bankcode.repositories.CardRepository;
+import com.vovarusskih72.bankcode.repositories.MailRepository;
 import com.vovarusskih72.bankcode.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -53,6 +60,9 @@ public class MainController {
     @Autowired
     private TransactionService transactionService;
 
+    @Autowired
+    private MailRepository mailRepository;
+
     private final static int CARD_SIZE = 6;
     private final static int TRANS_SIZE = 10;
 
@@ -65,18 +75,21 @@ public class MainController {
     }
 
     @RequestMapping(value = "/newuser", method = RequestMethod.POST)
-    public boolean addAccount(HttpServletRequest http, @RequestBody Account accountJson) throws MessagingException {
+    public ResponseEntity<ResultDTO> addAccount(HttpServletRequest http, @RequestBody Account accountJson) throws MessagingException {
         Account account = accountJson;
-        if(accountRepository.existsByLogin(account.getLogin())) {
-            return false;
+        if(accountRepository.existsByLogin(account.getLogin()) || accountRepository.existsByEmail(account.getEmail())) {
+            System.out.println("Error: Failed to create account");
+            return new ResponseEntity<>(new BadRequestResult(), HttpStatus.BAD_REQUEST);
         }
         System.out.println(account);
         String passHash = passwordEncoder.encode(account.getPassword());
         String code = passwordEncoder.encode(account.getLogin() + account.getName() + account.getSurname() + account.getPassword());
         Account accountSave = new Account(account.getLogin(), account.getName(), account.getSurname(), passHash, account.getPhone(), account.getEmail(), code, UserRoles.USER);
-//        sendEmail(http.getHeader("host"), account.getEmail(), code);
+        EmailSender emailSender = new EmailSender(http.getHeader("host"), account.getEmail(), code);
+        mailRepository.save(emailSender);
+        System.out.println("Success: Create account");
         accountRepository.save(accountSave);
-        return true;
+        return new ResponseEntity<>(new SuccessResult(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/newcard", method = RequestMethod.POST)
@@ -97,6 +110,12 @@ public class MainController {
         cardService.addCard(getCurrentWallet(), exchanges, 100000, passwordEncoder.encode(card.getPinCode()));
     }
 
+    @RequestMapping(value = "/updateuser")
+    public void updateUser(@RequestBody AccountDTO account) {
+        String login = getCurrentAccount().getUsername();
+        accountService.updateAccount(login, account.getName(), account.getSurname(), account.getPhone());
+    }
+
     @RequestMapping(value = "/cardlist")
     public List<CardDTO> getCardList(@RequestParam(defaultValue = "0", required = false) Integer page) {
         Wallet wallet = getCurrentWallet();
@@ -106,17 +125,26 @@ public class MainController {
     }
 
     @RequestMapping(value = "/maketransaction", method = RequestMethod.POST)
-    public boolean makeTransaction(@RequestBody TransactionDTO transaction) {
+    public ErrorInformation makeTransaction(@RequestBody TransactionDTO transaction) {
         System.out.println(transaction.toString());
         transaction.setDonorNumber(transaction.getDonorNumber().replace(" ", ""));
         String pinCode = transaction.getPinCode();
         System.out.println("-----------------------------" + transaction.getRecipientNumber() + " | " + transaction.getAmount());
-        boolean check = transactionService.makeNewTransaction(transaction.getDonorNumber(), pinCode, transaction.getRecipientNumber(), transaction.getAmount(), transaction.getComment());
-        return check;
+        String check = transactionService.makeNewTransaction(transaction.getDonorNumber(), pinCode, transaction.getRecipientNumber(), transaction.getAmount(), transaction.getComment());
+        return new ErrorInformation(check);
+        //        if(check) {
+//            System.out.println("Pin code right");
+//            return true;
+//            return new ResponseEntity<>(new SuccessResult(), HttpStatus.OK);
+//        } else {
+//            System.out.println("Pin code wrong");
+//            return false;
+//            return new ResponseEntity<>(new BadRequestResult(), HttpStatus.BAD_REQUEST);
+//        }
     }
 
     @RequestMapping(value = "/checkaccountemail", method = RequestMethod.POST)
-    public boolean resetPassword(HttpServletRequest http, @RequestBody Account accountJson) throws MessagingException {
+    public ResponseEntity<ResultDTO> resetPassword(HttpServletRequest http, @RequestBody Account accountJson) throws MessagingException {
         String email = accountJson.getEmail();
         boolean accountBool = accountRepository.existsByEmail(email);
         if(accountBool) {
@@ -124,19 +152,22 @@ public class MainController {
             String code = passwordEncoder.encode(account.getPassword() + account.getName() + email);
             account.setActivateCode(code);
             sendEmailToReset(http.getHeader("host"), email, code);
-            return true;
+            return new ResponseEntity<>(new SuccessResult(), HttpStatus.OK);
         } else {
-            return false;
+            return new ResponseEntity<>(new BadRequestResult(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @RequestMapping(value = "/setnewpassword")
-    public boolean setNewPassword(@RequestBody Account accountJson) {
+    public ResponseEntity<ResultDTO> setNewPassword(@RequestBody Account accountJson) {
         Account account = accountRepository.findAccountByActivateCode(accountJson.getActivateCode());
+        if (account == null) {
+            return new ResponseEntity<>(new BadRequestResult(), HttpStatus.BAD_REQUEST);
+        }
         account.setPassword(passwordEncoder.encode(accountJson.getPassword()));
         account.setActivateCode(null);
         accountRepository.save(account);
-        return true;
+        return new ResponseEntity<>(new SuccessResult(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/transactioninlist")
@@ -182,18 +213,6 @@ public class MainController {
 
         String htmlText = "<a href='http://"+ host + "/resetpassword.html?code=" + code + "'>Click here to change account password</a>";
         msg.setSubject("Change account password");
-        msg.setText(htmlText, true);
-
-        mailSender.send(mm);
-    }
-
-    public void sendEmail(String host, String email, String code) throws MessagingException {
-        MimeMessage mm = mailSender.createMimeMessage();
-        MimeMessageHelper msg = new MimeMessageHelper(mm);
-        msg.setTo(email);
-
-        String htmlText = "<a href='http://"+ host + "/activaccount?code=" + code + "'>Click here to activate account</a>";
-        msg.setSubject("JavaBank account and wallet activation");
         msg.setText(htmlText, true);
 
         mailSender.send(mm);

@@ -25,6 +25,14 @@ public class AccountService {
     }
 
     @Transactional
+    public void updateAccount(String login, String name, String surname, String phone) {
+        Account account = accountRepository.findAccountByLogin(login);
+        account.setName(name);
+        account.setSurname(surname);
+        account.setPhone(phone);
+    }
+
+    @Transactional
     public void activateAccount(String code) {
         Account account = accountRepository.findAccountByActivateCode(code);
         account.setRole(UserRoles.USER);

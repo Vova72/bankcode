@@ -6,13 +6,15 @@ public class CardDTO {
     private String exchange;
     private double amount;
     private String killDate;
+    private String cvv;
 
-    public CardDTO(String number, String pinCode, String exchange, double amount, String killDate) {
+    public CardDTO(String number, String pinCode, String exchange, double amount, String killDate, String cvv) {
         this.number = number;
         this.pinCode = pinCode;
         this.exchange = exchange;
         this.amount = amount;
         this.killDate = killDate;
+        this.cvv = cvv;
     }
 
     public String getPinCode() {
@@ -53,5 +55,13 @@ public class CardDTO {
 
     public void setAmount(double amount) {
         this.amount = amount;
+    }
+
+    public String getCvv() {
+        return cvv;
+    }
+
+    public void setCvv(String cvv) {
+        this.cvv = cvv;
     }
 }

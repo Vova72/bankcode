@@ -1,6 +1,7 @@
 html, body {
     height: 100%;
     width: 100%;
+    margin: 0px;
 }
 
 .accountInfo {
@@ -14,6 +15,10 @@ html, body {
 .accountInfo tr td {
     color: #B03329;
     font-style: italic;
+}
+
+.info {
+    padding: 0.2%;
 }
 
 #menu {

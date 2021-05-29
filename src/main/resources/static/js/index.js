@@ -36,13 +36,9 @@ function setCards(page) {
                             $("<h5 class=\"card-title\" style=\"margin-left: 50%;\">").append(data[i].killDate)))
                     .append($("<ul class=\"list-group list-group-flush\">").append(
                         $("<li class=\"list-group-item\">").append("Balance: " + data[i].amount),
-                        $("<li class=\"list-group-item\">").append("Exchange: " + data[i].exchange)
-                    ))
-                    .append($("<div class=\"card-body\">").append(
-                        $("<a href=\"/transactionlist.html\" class=\"card-link\" value=\"\">").append("Transaction list"),
-                        $("<a href=\"/newtransactionform.html\" class=\"card-link\" value=\"\">").append("Make transaction"),
-                        )
-                    ))
+                        $("<li class=\"list-group-item\">").append("Exchange: " + data[i].exchange),
+                        $("<li class=\"list-group-item\">").append("CVV code: " + data[i].cvv)
+                    )))
             );
         }
 
@@ -54,13 +50,9 @@ function setCards(page) {
                             $("<h5 class=\"card-title\" style=\"margin-left: 50%;\">").append(data[i].killDate)))
                             .append($("<ul class=\"list-group list-group-flush\">").append(
                                 $("<li class=\"list-group-item\">").append("Balance: " + data[i].amount),
-                                $("<li class=\"list-group-item\">").append("Exchange: " + data[i].exchange)
-                            ))
-                            .append($("<div class=\"card-body\">").append(
-                                $("<a href=\"/transactionlist.html\" class=\"card-link\" value=\"\">").append("Transaction list"),
-                                $("<a href=\"/newtransactionform.html\" class=\"card-link\" value=\"\">").append("Make transaction"),
-                                )
-                            ))
+                                $("<li class=\"list-group-item\">").append("Exchange: " + data[i].exchange),
+                                $("<li class=\"list-group-item\">").append("CVV code: " + data[i].cvv)
+                            )))
             );
         }
 

@@ -31,58 +31,66 @@ public class TransactionService {
     private ExchangeTableService exchangeTableService;
 
     @Transactional
-    public boolean makeNewTransaction(String donorCard, String pinCode, String recipientCard, double amount, String comment) {
+    public String makeNewTransaction(String donorCard, String pinCode, String recipientCard, double amount, String comment) {
         if (cardService.checkPin(donorCard, pinCode)) {
-            Exchanges exchanges = Exchanges.UAH;
+            if (cardRepository.existsByNumber(recipientCard) && cardRepository.existsByNumber(donorCard)) {
+                Exchanges exchanges = Exchanges.UAH;
+                System.out.print("Transaction successful");
+                Card realDonorCard = cardService.getCardByNumber(donorCard);
+                Card realRecipientCard = cardService.getCardByNumber(recipientCard);
+                ExchangeTable exchangeTable = exchangeTableService.getTodayExchange();
 
-            Card realDonorCard = cardService.getCardByNumber(donorCard);
-            Card realRecipientCard = cardService.getCardByNumber(recipientCard);
-            ExchangeTable exchangeTable = exchangeTableService.getTodayExchange();
+                if (realDonorCard.getAmount() < amount) {
+                    return "wrongAmount";
+                }
 
-            double uah = exchangeTable.getUahBuy();
-            double usd = exchangeTable.getUsdBuy();
-            double eur = exchangeTable.getEurBuy();
+                double uah = exchangeTable.getUahBuy();
+                double usd = exchangeTable.getUsdBuy();
+                double eur = exchangeTable.getEurBuy();
 
-            double mainAmount = 0;
+                double mainAmount = 0;
 
-            switch (realDonorCard.getExchange().toString()) {
-                case "UAH":
-                    mainAmount = amount * uah;
-                    break;
-                case "USD":
-                    mainAmount = amount * usd;
-                    break;
-                case "EUR":
-                    mainAmount = amount * eur;
-                    break;
+                switch (realDonorCard.getExchange().toString()) {
+                    case "UAH":
+                        mainAmount = amount * uah;
+                        break;
+                    case "USD":
+                        mainAmount = amount * usd;
+                        break;
+                    case "EUR":
+                        mainAmount = amount * eur;
+                        break;
+                }
+
+                double lastAmount = 0;
+
+                switch (realRecipientCard.getExchange().toString()) {
+                    case "UAH":
+                        lastAmount = mainAmount / uah;
+                        break;
+                    case "USD":
+                        lastAmount = mainAmount / usd;
+                        break;
+                    case "EUR":
+                        lastAmount = mainAmount / eur;
+                        break;
+                }
+
+                realRecipientCard.setAmount(realRecipientCard.getAmount() + lastAmount);
+                cardRepository.save(realRecipientCard);
+
+                realDonorCard.setAmount(realDonorCard.getAmount() - amount);
+                cardRepository.save(realDonorCard);
+
+                Transaction transaction = new Transaction(realDonorCard, realRecipientCard, exchanges, mainAmount, comment);
+                transactionRepository.save(transaction);
+                return "OK";
+            } else {
+                return "wrongCard";
             }
-
-            double lastAmount = 0;
-
-            switch (realRecipientCard.getExchange().toString()) {
-                case "UAH":
-                    lastAmount = mainAmount / uah;
-                    break;
-                case "USD":
-                    lastAmount = mainAmount / usd;
-                    break;
-                case "EUR":
-                    lastAmount = mainAmount / eur;
-                    break;
-            }
-
-            realRecipientCard.setAmount(realRecipientCard.getAmount() + lastAmount);
-            cardRepository.save(realRecipientCard);
-
-            realDonorCard.setAmount(realDonorCard.getAmount() - amount);
-            cardRepository.save(realDonorCard);
-
-            Transaction transaction = new Transaction(realDonorCard, realRecipientCard, exchanges, mainAmount, comment);
-            transactionRepository.save(transaction);
-            return true;
         } else {
             System.out.println("different pinCodes");
-            return false;
+            return "wrongPin";
         }
     }
 

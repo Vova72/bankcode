@@ -21,6 +21,10 @@ function registerFunc() {
                 contentType: "application/json",
                 data: JSON.stringify(account),
                 dataType: "json",
+                success: function () {
+                    alert("Your account has been created. Please check email to activate account");
+                    window.location.replace("/login.html");
+                },
                 error: function (xhr, status, error) {
                     var jsonError = jQuery.parseJSON( xhr.responseText );
                     var desc = (jsonError != "") ? jsonError.description : "no details";
@@ -28,8 +32,7 @@ function registerFunc() {
                     $("#login").attr("class", "form-control is-invalid");
                 }
             });
-            alert("Your account has been created. Please check email to activate account");
-            window.location.replace("/login.html");
+
         }
     });
 }

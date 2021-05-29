@@ -5,10 +5,9 @@ $(document).ready(function () {
 function registerFunc() {
     $("#submitButton").click(function (e) {
         if($("#checkPassword").val() == "" || $("#password").val() == "") {
-        document.getElementById("error").innerHTML = "WARNING: Please enter all fields!";
         } else {
             if ($("#checkPassword").val() != $("#password").val()) {
-                document.getElementById("error").innerHTML = "WARNING: Please enter the same passwords!";
+                $("#checkPassword").attr("class", "form-control is-invalid");
             } else {
                 var account = {
                     activateCode: getParameterByName("code"),
@@ -21,7 +20,7 @@ function registerFunc() {
                     contentType: "application/json",
                     data: JSON.stringify(account),
                     dataType: "json",
-                    success: alert("Your password has been changed")
+                    success: alert("Your password has been changed"),
                 });
                 window.location.replace("/login.html");
             }

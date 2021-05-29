@@ -51,6 +51,7 @@
 </div>
 
 <div class="cardForm" id="data">
+    <form>
     <div class="row g-0">
         <label for="validationDefault04" class="col-sm-5 col-form-label">Card</label>
         <div class="col-sm-5">
@@ -72,8 +73,8 @@
     <div class="row g-0" style="margin-bottom: 3%;">
         <label for="pinCode" class="col-sm-5 col-form-label">Set amount</label>
         <div class="col-sm-2">
-            <input name="j_password" type="text" maxlength="" minlength="" placeholder="" c class="form-control" id="amount" aria-describedby="validationServer05Feedback" required>
-            <div id="validationServer05Feedback" class="invalid-feedback">
+            <input name="j_password" type="text" maxlength="" minlength="" placeholder="" c class="form-control" id="amount" aria-describedby="validationServer06Feedback" required>
+            <div id="validationServer06Feedback" class="invalid-feedback">
                 You haven't enough money
             </div>
         </div>
@@ -82,7 +83,10 @@
     <div class="row g-0" style="margin-bottom: 3%;">
         <label for="pinCode" class="col-sm-5 col-form-label">Recipient card number</label>
         <div class="col-sm-5">
-            <input name="j_password" type="text" maxlength="16" minlength="" placeholder="" c class="form-control" id="recipientCard" aria-describedby="validationServer05Feedback" required>
+            <input name="j_password" type="text" maxlength="16" minlength="" placeholder="" c class="form-control" id="recipientCard" aria-describedby="validationServer07Feedback" required>
+            <div id="validationServer07Feedback" class="invalid-feedback">
+                Card is not exist
+            </div>
         </div>
     </div>
 
@@ -93,6 +97,7 @@
         </div>
     </div>
     <button class="btn btn-primary" type="button" id="submitButton">Make transaction</button>
+    </form>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>

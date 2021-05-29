@@ -28,42 +28,44 @@ public class ExchangeTableComponent {
 
     @Scheduled(fixedDelay = 86400000)
     public void saveExchange() throws IOException {
+
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
         String today = format.format(new Date());
-        System.out.println(today);
-        String urlApi = "https://api.privatbank.ua/p24api/exchange_rates?json&date=" + today;
-        URL url = new URL(urlApi);
+        if(!exchangeTableRepository.existsExchangeTableByDate(today)) {
+            System.out.println(today);
+            String urlApi = "https://api.privatbank.ua/p24api/exchange_rates?json&date=" + today;
+            URL url = new URL(urlApi);
 
-        Gson gson = new Gson();
+            Gson gson = new Gson();
 
-        InputStreamReader readerIn = new InputStreamReader(url.openStream());
-        BufferedReader reader = new BufferedReader(readerIn);
-        StringBuffer sb = new StringBuffer();
-        String str;
-        while((str = reader.readLine())!= null){
-            sb.append(str);
-        }
-        ExchangeListDTO text = gson.fromJson(sb.toString(), ExchangeListDTO.class);
-        List<ExchangeDTO> exchanges = text.getExchangeRate();
-        ExchangeTable exchangeTable = new ExchangeTable();
-        exchangeTable.setDate(today);
-        exchangeTable.setUahBuy(1d);
-        exchangeTable.setUahSale(1d);
-        for(ExchangeDTO exchange : exchanges) {
-            if(exchange.getCurrency() != null) {
-                if (exchange.getCurrency().equals("USD")) {
-                    exchangeTable.setUsdBuy(exchange.getPurchaseRateNB());
-                    exchangeTable.setUsdSale(exchange.getSaleRateNB());
-                }
-                if (exchange.getCurrency().equals("EUR")) {
-                    exchangeTable.setEurBuy(exchange.getPurchaseRateNB());
-                    exchangeTable.setEurSale(exchange.getSaleRateNB());
+            InputStreamReader readerIn = new InputStreamReader(url.openStream());
+            BufferedReader reader = new BufferedReader(readerIn);
+            StringBuffer sb = new StringBuffer();
+            String str;
+            while((str = reader.readLine())!= null){
+                sb.append(str);
+            }
+            ExchangeListDTO text = gson.fromJson(sb.toString(), ExchangeListDTO.class);
+            List<ExchangeDTO> exchanges = text.getExchangeRate();
+            ExchangeTable exchangeTable = new ExchangeTable();
+            exchangeTable.setDate(today);
+            exchangeTable.setUahBuy(1d);
+            exchangeTable.setUahSale(1d);
+            for(ExchangeDTO exchange : exchanges) {
+                if(exchange.getCurrency() != null) {
+                    if (exchange.getCurrency().equals("USD")) {
+                        exchangeTable.setUsdBuy(exchange.getPurchaseRateNB());
+                        exchangeTable.setUsdSale(exchange.getSaleRateNB());
+                    }
+                    if (exchange.getCurrency().equals("EUR")) {
+                        exchangeTable.setEurBuy(exchange.getPurchaseRateNB());
+                        exchangeTable.setEurSale(exchange.getSaleRateNB());
+                    }
                 }
             }
-        }
-        System.out.println(exchangeTable.toString());
+            System.out.println(exchangeTable.toString());
 
-        exchangeTableRepository.save(exchangeTable);
+            exchangeTableRepository.save(exchangeTable);
     }
-
+    }
 }

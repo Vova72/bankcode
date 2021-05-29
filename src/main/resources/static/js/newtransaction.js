@@ -22,21 +22,28 @@ function registerFunc() {
                 comment: commentT
             }
 
-            alert(JSON.stringify(transaction));
-
             $.ajax({
                 type: "POST",
                 url: "/maketransaction",
                 contentType: "application/json",
                 data: JSON.stringify(transaction),
                 dataType: "json",
-                success: window.location.replace("/index.html"),
-                error: function (xhr, status, error) {
-                    var jsonError = jQuery.parseJSON( xhr.responseText );
-                    var desc = (jsonError != "") ? jsonError.description : "no details";
-
-                    $("#pinCode").attr("class", "form-control is-invalid");
-                }
+                success: function (data) {
+                    //alert(data.infor);
+                    if (data.infor == "OK") {
+                        window.location.replace("/index.html");
+                    }
+                    else if (data.infor == "wrongPin") {
+                        $("#pinCode").attr("class", "form-control is-invalid");
+                    }
+                    else if (data.infor == "wrongCard") {
+                        $("#recipientCard").attr("class", "form-control is-invalid")
+                    }
+                    else if (data.infor == "wrongAmount") {
+                        $("#amount").attr("class", "form-control is-invalid")
+                    }
+                },
+                //error: $("#pinCode").attr("class", "form-control is-invalid")
             });
         }
     });

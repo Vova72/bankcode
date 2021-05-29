@@ -5,7 +5,7 @@ $(document).ready(function () {
 function registerFunc() {
     $("#submitButton").click(function (e) {
         if($("#email").val() == "") {
-        document.getElementById("error").innerHTML = "WARNING: Please enter all fields!";
+            $("#email").attr("class", "form-control is-invalid");
         } else {
             var account = {
                 email: $("#email").val()
@@ -17,9 +17,12 @@ function registerFunc() {
                 contentType: "application/json",
                 data: JSON.stringify(account),
                 dataType: "json",
-                success: alert("Please check email to change password")
+                success: function () {
+                    alert("Please check email to change password");
+                    window.location.replace("/login.html");
+                },
+                error: $("#email").attr("class", "form-control is-invalid")
             });
-            window.location.replace("/login.html");
         }
     });
 }

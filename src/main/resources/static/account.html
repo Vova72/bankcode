@@ -53,28 +53,47 @@
 <div class="exchangesmain" id="data">
     <table class="table">
     <tbody class="accountInfo">
-    <tr class="table-success">
+    <div class="info"><tr class="table-success">
         <th scope="row">Login: </th>
-        <td id="login"></td>
-    </tr>
+        <td id="loginT"><input name="j_login" type="text" class="form-control" id="login" aria-describedby="inputGroupPrepend3 validationServerUsernameFeedback" disabled required></td>
+    </tr></div>
+    <div class="info">
     <tr>
-        <th scope="row">Name and Surname:</th>
-        <td id="name">Jacob</td>
+        <th scope="row">Name: </th>
+        <td id="nameT"><input name="j_login" type="text" class="form-control" id="name" aria-describedby="inputGroupPrepend3 validationServerUsernameFeedback" required></td>
     </tr>
-    <tr>
-        <th scope="row">Email: </th>
-        <td colspan="2" id="email">vovarusskih</td>
-    </tr>
-    <tr>
-        <th scope="row">Phone: </th>
-        <td colspan="2" id="phone">+38039098224</td>
-    </tr>
+    </div>
+    <div class="info">
+        <tr>
+            <th scope="row">Surname: </th>
+            <td id="surnameT"><input name="j_login" type="text" class="form-control" id="surname" aria-describedby="inputGroupPrepend3 validationServerUsernameFeedback" required></td>
+        </tr>
+    </div>
+    <div class="info">
+        <tr>
+            <th scope="row">Email: </th>
+            <td id="emailT"><input name="j_login" type="text" class="form-control" id="email" aria-describedby="inputGroupPrepend3 validationServerUsernameFeedback" disabled required></td>
+        </tr>
+    </div>
+    <div class="info">
+        <tr>
+            <th scope="row">Phone: </th>
+            <td id="phoneT"><input name="j_login" type="text" class="form-control" id="phone" aria-describedby="inputGroupPrepend3 validationServerUsernameFeedback" required></td>
+        </tr>
+    </div>
+    <div class="info">
+        <tr>
+            <th scope="row">Password: </th>
+            <td id="passwordT"><input name="j_login" type="password" class="form-control" id="password" aria-describedby="inputGroupPrepend3 validationServerUsernameFeedback" value="11111111" disabled required></td>
+        </tr>
+    </div>
     <tr>
         <th scope="row">Cards:</th>
         <td colspan="2" id="cardsCount2"></td>
     </tr>
     </tbody>
     </table>
+    <button class="btn btn-primary" id="submitButton" type="submit">Save</button> <a href="/newpassword.html" class="btn btn-link">Change password</a> <a href="/logout" class="btn btn-link">Log out</a>
 </div>
 
 <div class="pageable" id="pageable">

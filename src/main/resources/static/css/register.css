@@ -14,23 +14,30 @@ body {
     background-color: whitesmoke;
     border: lightgrey 1px solid;
     border-radius: 5px;
-    width: 70%;
+    width: 60%;
     height: auto;
-    margin-left: 14.5%;
+    margin-left: 20%;
     margin-top: 7%;
-    padding: 5%;
+}
+
+.fields {
+    margin: 3%;
+}
+
+.shapka {
+    color: white;
+    background-color: #198754;
+    width: 100%;
+    padding: 2%;
+}
+
+.shapka h1 {
+    margin-left: 22.5%;
 }
 
 .hrefAccount {
     text-decoration-line: none;
     margin-top: 1.5%;
-    margin-left: 50%;
+    margin-left: 15%;
     font-size: 1.01em;
-}
-
-.error {
-    color: orangered;
-    font-size: 1.01em;
-    margin-left: 5%;
-    margin-top: 1.5%;
 }

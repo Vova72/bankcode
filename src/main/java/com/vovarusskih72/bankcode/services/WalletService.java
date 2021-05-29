@@ -26,7 +26,7 @@ public class WalletService {
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         for(Card card : cards) {
             String killDate = format.format(card.getKillDate());
-            cardsDTO.add(new CardDTO(card.getNumber(), null ,card.getExchange().toString(), card.getAmount(), killDate));
+            cardsDTO.add(new CardDTO(card.getNumber(), null ,card.getExchange().toString(), card.getAmount(), killDate, card.getCvv()));
         }
         return cardsDTO;
     }

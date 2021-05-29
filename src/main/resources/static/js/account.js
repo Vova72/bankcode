@@ -2,6 +2,7 @@ $(document).ready(
     function () {
         loadExchanges(0);
         loadAnotherInfo();
+        saveData();
     }
 );
 
@@ -10,14 +11,35 @@ function loadExchanges(page) {
     $.getJSON("/account", function (data) {
         $("#login").empty();
         $("#name").empty();
+        $("#surname").empty();
         $("#email").empty();
         $("#phone").empty();
-        $("#login").append(data.login);
-        $("#name").append(data.name + " " + data.surname);
-        $("#email").append(data.email);
-        $("#phone").append(data.phone);
+        $("#login").attr("value", data.login);
+        $("#name").attr("value", data.name);
+        $("#surname").attr("value", data.surname);
+        $("#email").attr("value", data.email);
+        $("#phone").attr("value", data.phone);
 
     });
+}
+
+function saveData() {
+    $("#submitButton").click(function (e) {
+        if($("#name").val() != "" && $("#phone").val() != "" && $("#surname").val() != "") {
+        var account = {
+            name: $("#name").val(),
+            surname: $("#surname").val(),
+            phone: $("#phone").val(),
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/updateuser",
+            contentType: "application/json",
+            data: JSON.stringify(account),
+            dataType: "json"
+        });
+    }})
 }
 
 function loadAnotherInfo() {

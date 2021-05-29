@@ -20,8 +20,6 @@ function registerFunc() {
                 pinCode: $("#pinCode").val()
             }
 
-            alert(JSON.stringify(card));
-
             $.ajax({
                 type: "POST",
                 url: "/newcard",

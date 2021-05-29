@@ -138,6 +138,14 @@ public class Card {
         this.pinCode = pinCode;
     }
 
+    public String getCvv() {
+        return cvv;
+    }
+
+    public void setCvv(String cvv) {
+        this.cvv = cvv;
+    }
+
     @Override
     public String toString() {
         return "Card{" +

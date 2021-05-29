@@ -13,6 +13,8 @@ public interface ExchangeTableRepository extends JpaRepository<ExchangeTable, Lo
     @Query("SELECT ex FROM ExchangeTable ex")
     List<ExchangeTable> findAllByPage(Pageable pageable);
 
+    boolean existsExchangeTableByDate(String date);
+
     Long countAllByUahSale(double uahSale);
 //    List<ExchangeTable> findExchangeTablesByPeriod(String fromDate, String toDate);
 }
