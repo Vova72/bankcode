@@ -27,8 +27,8 @@ public class AppConfig extends GlobalMethodSecurityConfiguration {
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
 
-        mailSender.setUsername("codeJavaBot@gmail.com");
-        mailSender.setPassword("f3fae7d900dc4e28f1848755aed9eb80adf83ebf9642715d26a2bc4514ebd59e");
+        mailSender.setUsername("bankbotjava@gmail.com");
+        mailSender.setPassword("bankbot1234567890");
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
