@@ -5,10 +5,14 @@ import com.vovarusskih72.bankcode.services.AccountService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Properties;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -16,6 +20,24 @@ public class AppConfig extends GlobalMethodSecurityConfiguration {
 
     @Bean
     public PasswordEncoder passwordEncoder () {return new BCryptPasswordEncoder();}
+
+    @Bean
+    public JavaMailSender getJavaMailSender() {
+        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        mailSender.setHost("smtp.gmail.com");
+        mailSender.setPort(587);
+
+        mailSender.setUsername("codeJavaBot@gmail.com");
+        mailSender.setPassword("f3fae7d900dc4e28f1848755aed9eb80adf83ebf9642715d26a2bc4514ebd59e");
+
+        Properties props = mailSender.getJavaMailProperties();
+        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.debug", "true");
+
+        return mailSender;
+    }
 
     @Bean
     public CommandLineRunner demo(final AccountService accountService,

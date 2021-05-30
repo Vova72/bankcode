@@ -40,7 +40,6 @@ public class MailComponent {
         String htmlText = "<a href='http://"+ host + "/activaccount?code=" + code + "'>Click here to activate account</a>";
         msg.setSubject("JavaBank account and wallet activation");
         msg.setText(htmlText, true);
-
         mailSender.send(mm);
     }
 }
